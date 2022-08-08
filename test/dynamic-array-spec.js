@@ -137,11 +137,13 @@ describe ('Dynamic Array', function () {
     dynamicArr.push(13);
 
     expect(dynamicArr.capacity).to.equal(4);
+    expect(dynamicArr.data.length).to.equal(4);
     expect(dynamicArr.length).to.equal(4);
 
     dynamicArr.resize();
 
     expect(dynamicArr.capacity).to.equal(8);
+    expect(dynamicArr.data.length).to.equal(8);
     expect(dynamicArr.length).to.equal(4);
     expect(dynamicArr.read(0)).to.equal(10);
     expect(dynamicArr.read(1)).to.equal(11);
@@ -158,11 +160,13 @@ describe ('Dynamic Array', function () {
     dynamicArr.push(13);
 
     expect(dynamicArr.capacity).to.equal(4);
+    expect(dynamicArr.data.length).to.equal(4);
     expect(dynamicArr.length).to.equal(4);
 
     dynamicArr.push(14);
 
     expect(dynamicArr.capacity).to.equal(8);
+    expect(dynamicArr.data.length).to.equal(8);
     expect(dynamicArr.length).to.equal(5);
 
     dynamicArr.unshift(9);
@@ -171,6 +175,7 @@ describe ('Dynamic Array', function () {
     dynamicArr.unshift(6);
 
     expect(dynamicArr.capacity).to.equal(16);
+    expect(dynamicArr.data.length).to.equal(16);
     expect(dynamicArr.length).to.equal(9);
 
     expect(dynamicArr.read(0)).to.equal(6);
@@ -188,4 +193,3 @@ describe ('Dynamic Array', function () {
 
 
 });
-
