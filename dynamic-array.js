@@ -1,6 +1,6 @@
 class DynamicArray {
 
-  constructor(defaultSize=4) {
+  constructor(defaultSize = 4) {
 
     // Your code here
   }
@@ -31,12 +31,12 @@ class DynamicArray {
     // Your code here
   }
 
-  indexOf (val) {
+  indexOf(val) {
 
     // Your code here
   }
 
-  resize () {
+  resize() {
 
     // Your code here
   }

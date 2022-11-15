@@ -1,16 +1,26 @@
 const { expect } = require('chai');
-
 const DynamicArray = require("../dynamic-array.js");
+const chai = require("chai");
+const spies = require("chai-spies");
+chai.use(spies);
 
-describe ('Dynamic Array', function () {
+describe('Dynamic Array', function () {
 
   let dynamicArr;
+  let noBuiltInMethods;
 
   beforeEach(function () {
-
     dynamicArr = new DynamicArray();
-
+    noBuiltInMethods = chai.spy.on(dynamicArr.data, ["shift", "unshift", "push", "pop", "concat", "indexOf"]);
   });
+
+  afterEach(function () {
+    // it shouldn't use any built-in methods
+    // this runs after each test
+    noBuiltInMethods.forEach(
+      spy => expect(spy).to.have.not.been.called()
+    )
+  })
 
   it('has capacity, length and data properties', function () {
 
@@ -32,15 +42,16 @@ describe ('Dynamic Array', function () {
 
   it('can read the value at a given index', function () {
 
+    expect(dynamicArr.read(0)).to.equal(undefined);
+
     dynamicArr.data[0] = 3;
     dynamicArr.length = 1;
 
     expect(dynamicArr.read(0)).to.equal(3);
-    expect(dynamicArr.read(1)).to.equal(undefined);
 
   });
 
-  it('can `push()` onto the end of the array', function () {
+  it('can `push()` single values onto the end of the array', function () {
 
     dynamicArr.push(1);
     expect(dynamicArr.length).to.equal(1);
@@ -74,6 +85,9 @@ describe ('Dynamic Array', function () {
     expect(dynamicArr.length).to.equal(1);
 
     expect(dynamicArr.pop()).to.equal(1);
+    expect(dynamicArr.length).to.equal(0);
+
+    expect(dynamicArr.pop()).to.equal(undefined);
     expect(dynamicArr.length).to.equal(0);
 
   });
@@ -114,6 +128,9 @@ describe ('Dynamic Array', function () {
     expect(dynamicArr.shift()).to.equal(3);
     expect(dynamicArr.length).to.equal(0);
 
+    expect(dynamicArr.shift()).to.equal(undefined);
+    expect(dynamicArr.length).to.equal(0);
+
   });
 
   it('can find a value in the array using `indexOf`', function () {
@@ -125,19 +142,23 @@ describe ('Dynamic Array', function () {
     expect(dynamicArr.indexOf(1)).to.equal(0);
     expect(dynamicArr.indexOf(2)).to.equal(1);
     expect(dynamicArr.indexOf(3)).to.equal(2);
+
+    // For non-existent values, we'll return -1
     expect(dynamicArr.indexOf(4)).to.equal(-1);
 
   });
 
   it('will double in size and copy elements with `resize`', function () {
 
-    dynamicArr.push(10);
-    dynamicArr.push(11);
-    dynamicArr.push(12);
-    dynamicArr.push(13);
-
     expect(dynamicArr.capacity).to.equal(4);
     expect(dynamicArr.data.length).to.equal(4);
+
+    dynamicArr.push(10);
+    dynamicArr.push(11);
+    expect(dynamicArr.length).to.equal(2);
+
+    dynamicArr.push(12);
+    dynamicArr.push(13);
     expect(dynamicArr.length).to.equal(4);
 
     dynamicArr.resize();
@@ -145,10 +166,13 @@ describe ('Dynamic Array', function () {
     expect(dynamicArr.capacity).to.equal(8);
     expect(dynamicArr.data.length).to.equal(8);
     expect(dynamicArr.length).to.equal(4);
+
     expect(dynamicArr.read(0)).to.equal(10);
     expect(dynamicArr.read(1)).to.equal(11);
     expect(dynamicArr.read(2)).to.equal(12);
     expect(dynamicArr.read(3)).to.equal(13);
+    expect(dynamicArr.read(4)).to.equal(undefined);
+    expect(dynamicArr.data[4]).to.equal(undefined);
 
   });
 
@@ -158,11 +182,6 @@ describe ('Dynamic Array', function () {
     dynamicArr.push(11);
     dynamicArr.push(12);
     dynamicArr.push(13);
-
-    expect(dynamicArr.capacity).to.equal(4);
-    expect(dynamicArr.data.length).to.equal(4);
-    expect(dynamicArr.length).to.equal(4);
-
     dynamicArr.push(14);
 
     expect(dynamicArr.capacity).to.equal(8);
@@ -189,7 +208,5 @@ describe ('Dynamic Array', function () {
     expect(dynamicArr.read(8)).to.equal(14);
 
   });
-
-
 
 });
